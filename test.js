@@ -28,10 +28,7 @@ function worker(){
       if (err) {
         console.log(err);
       }
-      if (!deletedMessages[message.id]) {
-        deletedMessages[message.id] = message.id;
-        queue.del(message.id, onDelete);
-      }
+      queue.del(message.id, onDelete);
       worker();
     }
 
