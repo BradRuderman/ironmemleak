@@ -1,9 +1,10 @@
-var memwatch = require('memwatch');
+var memwatch = require('memwatch-next');
 memwatch.on('leak', function(info) {
   console.log("Leak Detected")
   console.log(info)
 });
 
+var timeoutHandle;
 
 var iron_mq = require('iron_mq'),
     imq = new iron_mq.Client({
@@ -16,7 +17,7 @@ function worker(){
 
   function onDelete(err){
     if(err){
-      logger.error(err);
+      console.log(err);
     }
   }
 
@@ -25,7 +26,7 @@ function worker(){
 
     function onHandle(err){
       if (err) {
-
+        console.log(err);
       }
       if (!deletedMessages[message.id]) {
         deletedMessages[message.id] = message.id;
@@ -35,18 +36,17 @@ function worker(){
     }
 
     if(err){
-      logger.error(err);
-      var t = setTimeout(worker, 1000);
+      console.log(err);
+      timeoutHandle = setTimeout(worker, 5000);
     }
     else if(message){
       console.log("Processing " + message);
       onHandle()
     }
     else{
-      console.log("queue complete")
-      var t = setTimeout(worker, 1000);
+      console.log("queue complete");
+      timeoutHandle = setTimeout(worker, 1000);
     }
-    return;
   }
 
   queue.get({}, onGet);
