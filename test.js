@@ -5,14 +5,15 @@ memwatch.on('leak', function(info) {
 });
 
 var timeoutHandle;
+var i =0;
 
-var iron_mq = require('iron_mq'),
+/*var iron_mq = require('iron_mq'),
     imq = new iron_mq.Client({
         token: "OOPjd5Pl5i7Kfltu5OebEAfcY10",
         project_id: "55a697286d8ad9000a0000dc"
     }),
     queue = imq.queue("test");
-
+*/
 function worker(){
 
   function onDelete(err){
@@ -28,7 +29,7 @@ function worker(){
       if (err) {
         console.log(err);
       }
-      queue.del(message.id, onDelete);
+  //    queue.del(message.id, onDelete);
       worker();
     }
 
@@ -37,7 +38,8 @@ function worker(){
       timeoutHandle = setTimeout(worker, 5000);
     }
     else if(message){
-      console.log("Processing " + message);
+      console.log("Processing " + message + i.toString());
+      i = i + 1;
       onHandle()
     }
     else{
@@ -45,8 +47,8 @@ function worker(){
       timeoutHandle = setTimeout(worker, 1000);
     }
   }
-
-  queue.get({}, onGet);
+  setTimeout(function(){onGet(null,"test")},500);
+//  queue.get({}, onGet);
 }
 
 console.log("Starting queue");
